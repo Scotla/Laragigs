@@ -16,8 +16,8 @@ class ListingController extends Controller
     {
         //
         // dd(Listing::latest()->filter(request(['taggy','search']))->paginate(6));
-        return view('listings.index',[
-            'listings' => Listing::latest()->filter(request(['taggy','search']))->simplePaginate(10) //can also use paginate()
+        return view('listings.index', [
+            'listings' => Listing::latest()->filter(request(['taggy', 'search']))->simplePaginate(10) //can also use paginate()
         ]);
     }
 
@@ -27,8 +27,8 @@ class ListingController extends Controller
     public function create()
     {
         //
-        return view('listings.create');
-;    }
+        return view('listings.create');;
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -40,7 +40,7 @@ class ListingController extends Controller
         // dd($request->company);
         $formFields = $request->validate([
             'title' => 'required',
-            'company' => ['required', Rule::unique('listings','company')],
+            'company' => ['required', Rule::unique('listings', 'company')],
             'location' => 'required',
             'website' => 'required',
             'email' => ['required', 'email'],
@@ -48,16 +48,15 @@ class ListingController extends Controller
             'description' => 'required'
         ]);
 
-        if($request->hasFile('logo')){
-            $formFields['logo'] = $request->file('logo')->store('logos','public');
-
-        } else{
-            $formFields['logo']= "";
+        if ($request->hasFile('logo')) {
+            $formFields['logo'] = $request->file('logo')->store('logos', 'public');
+        } else {
+            $formFields['logo'] = "";
         }
         $formFields['user_id'] = auth()->id();
         Listing::create($formFields);
 
-       return redirect('/listings')->with('message', 'Details entered successfully');
+        return redirect('/listings')->with('message', 'Details entered successfully');
     }
 
     /**
@@ -66,7 +65,7 @@ class ListingController extends Controller
     public function show(Listing $listing)
     {
         //
-        return view('listings.show',[
+        return view('listings.show', [
             'listing' => $listing
         ]);
     }
@@ -77,7 +76,7 @@ class ListingController extends Controller
     public function edit(Listing $listing)
     {
         //
-        return view('listings.edit',[
+        return view('listings.edit', [
             'listing' => $listing
         ]);
     }
@@ -87,8 +86,8 @@ class ListingController extends Controller
      */
     public function update(Request $request, Listing $listing)
     {
-        if($listing->user_id != auth()->id()){
-            abort(403,'Unauthorized action');
+        if ($listing->user_id != auth()->id()) {
+            abort(403, 'Unauthorized action');
         }
         //
         $formFields = $request->validate([
@@ -100,16 +99,15 @@ class ListingController extends Controller
             'tags' => 'required',
             'description' => 'required'
         ]);
-        if($request->hasFile('logo')){
-            $formFields['logo'] = $request->file('logo')->store('logos','public');
-
-        } else{
-            $formFields['logo']= "";
+        if ($request->hasFile('logo')) {
+            $formFields['logo'] = $request->file('logo')->store('logos', 'public');
+        } else {
+            $formFields['logo'] = "";
         }
         $listing->update($formFields);
 
         // return redirect('/listings')->with('message', 'Details updated successfully');
-       return back()->with('message', 'Details updated successfully');
+        return back()->with('message', 'Details updated successfully');
     }
 
     /**
@@ -118,17 +116,17 @@ class ListingController extends Controller
     public function destroy(Listing $listing)
     {
         //
-        if($listing->user_id != auth()->id()){
-            abort(403,'Unauthorized action');
+        if ($listing->user_id != auth()->id()) {
+            abort(403, 'Unauthorized action');
         }
         $listing->delete();
 
         return redirect('/listings')->with('message', 'Record has been successfully removed');
     }
-    public function manage(){
-        return view('listings.manage',[
+    public function manage()
+    {
+        return view('listings.manage', [
             'listings' => auth()->user()->listings()->get()
         ]);
     }
-    
 }
