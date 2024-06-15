@@ -126,11 +126,11 @@ class ListingController extends Controller
     public function manage()
     {
         $user = new User;
-        $fix = $user->listings()->get();
-        dd($user->listings());
+        // $fix = $user->listings()->get();
+        // dd($user->listings());
         // dd($user->listings()->get());
         return view('listings.manage', [
-            'listings' => auth()->User::listings()
+            'listings' => auth()->user()->listings()->get()
         ]);
     }
 }
